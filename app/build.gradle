@@ -28,10 +28,31 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
     compile "com.android.support:appcompat-v7:$support_libs_version"
     compile "com.android.support:design:$support_libs_version"
+
+    // Firebase Service
+    compile "com.google.firebase:firebase-auth:$firebase_version"
+    compile "com.google.firebase:firebase-database:$firebase_version"
+
+    // Google Sign In SDK (only required for Google Sign In)
+    compile "com.google.android.gms:play-services-auth:$firebase_version"
+
+    // Facebook Android SDK (only required for Facebook Login)
+    compile "com.facebook.android:facebook-android-sdk:$facebook_sdk_version"
+
+    // Twitter Android SDK (only required for Twitter Login)
+    compile("com.twitter.sdk.android:twitter-core:$twitter_core_version@aar") {
+        transitive = true
+    }
+    compile("com.twitter.sdk.android:twitter:$twitter_sdk_version@aar") {
+        transitive = true;
+    }
+
     compile "com.byox.drawview:drawview:$drawview_version"
 }
+apply plugin: 'com.google.gms.google-services'
 
 buildscript {
     repositories {

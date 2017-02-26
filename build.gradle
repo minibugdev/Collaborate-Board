@@ -1,6 +1,10 @@
 ext {
     kotlin_version = '1.0.6'
     support_libs_version = '25.2.0'
+    firebase_version = '10.2.0'
+    facebook_sdk_version = '4.9.0'
+    twitter_core_version = '1.6.6'
+    twitter_sdk_version = '1.13.1'
     drawview_version = '1.0.5'
 }
 
@@ -10,6 +14,7 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:2.2.3"
+        classpath "com.google.gms:google-services:3.0.0"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

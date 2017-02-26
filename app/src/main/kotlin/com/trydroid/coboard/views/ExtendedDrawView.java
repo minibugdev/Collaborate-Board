@@ -37,13 +37,13 @@ import java.util.List;
  *
  * @author Ing. Oscar G. Medina Cruz
  */
-public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener {
+public class ExtendedDrawView extends FrameLayout implements View.OnTouchListener {
 
     // FINAL VARS
     final String TAG = "DrawView";
 
     // LISTENER
-    private ExtenedDrawView.OnDrawViewListener onDrawViewListener;
+    private ExtendedDrawView.OnDrawViewListener onDrawViewListener;
 
     // VARS
     private int         mDrawColor;
@@ -61,14 +61,16 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
     private DrawingTool mDrawingTool;
 
     private List<DrawMove> mDrawMoveHistory;
-    private int mDrawMoveHistoryIndex = -1;
+    private int mDrawMoveHistoryIndex     = -1;
+    private int mLatestDrawMoveStartIndex = -1;
+    private int mLatestDrawMoveEndIndex   = -1;
 
     /**
      * Default constructor
      *
      * @param context
      */
-    public ExtenedDrawView(Context context) {
+    public ExtendedDrawView(Context context) {
         super(context);
         initVars();
     }
@@ -79,7 +81,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param context
      * @param attrs
      */
-    public ExtenedDrawView(Context context, AttributeSet attrs) {
+    public ExtendedDrawView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initVars();
         initAttributes(context, attrs);
@@ -92,7 +94,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param attrs
      * @param defStyleAttr
      */
-    public ExtenedDrawView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ExtendedDrawView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initVars();
         initAttributes(context, attrs);
@@ -107,7 +109,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param defStyleRes
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ExtenedDrawView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ExtendedDrawView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initVars();
         initAttributes(context, attrs);
@@ -538,6 +540,11 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
         return mDrawMoveHistory;
     }
 
+    public void addDrawMoveHistory(DrawMove drawMove) {
+        mDrawMoveHistory.add(drawMove);
+        invalidate();
+    }
+
     // SETTERS
 
     /**
@@ -546,7 +553,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param paint
      * @return this instance of the view
      */
-    public ExtenedDrawView refreshAttributes(Paint paint) {
+    public ExtendedDrawView refreshAttributes(Paint paint) {
         mDrawColor = paint.getColor();
         mPaintStyle = paint.getStyle();
         mDither = paint.isDither();
@@ -565,7 +572,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param drawAlpha
      * @return this instance of the view
      */
-    public ExtenedDrawView setDrawAlpha(int drawAlpha) {
+    public ExtendedDrawView setDrawAlpha(int drawAlpha) {
         this.mDrawAlpha = drawAlpha;
         return this;
     }
@@ -576,7 +583,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param drawColor
      * @return this instance of the view
      */
-    public ExtenedDrawView setDrawColor(int drawColor) {
+    public ExtendedDrawView setDrawColor(int drawColor) {
         this.mDrawColor = drawColor;
         return this;
     }
@@ -587,7 +594,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param drawWidth
      * @return this instance of the view
      */
-    public ExtenedDrawView setDrawWidth(int drawWidth) {
+    public ExtendedDrawView setDrawWidth(int drawWidth) {
         this.mDrawWidth = drawWidth;
         return this;
     }
@@ -598,7 +605,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param drawingMode
      * @return this instance of the view
      */
-    public ExtenedDrawView setDrawingMode(DrawingMode drawingMode) {
+    public ExtendedDrawView setDrawingMode(DrawingMode drawingMode) {
         this.mDrawingMode = drawingMode;
         return this;
     }
@@ -609,7 +616,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param drawingTool
      * @return this instance of the view
      */
-    public ExtenedDrawView setDrawingTool(DrawingTool drawingTool) {
+    public ExtendedDrawView setDrawingTool(DrawingTool drawingTool) {
         this.mDrawingTool = drawingTool;
         return this;
     }
@@ -620,7 +627,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param backgroundColor
      * @return this instance of the view
      */
-    public ExtenedDrawView setBackgroundDrawColor(int backgroundColor) {
+    public ExtendedDrawView setBackgroundDrawColor(int backgroundColor) {
         this.mBackgroundColor = backgroundColor;
         return this;
     }
@@ -631,7 +638,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param paintStyle
      * @return this instance of the view
      */
-    public ExtenedDrawView setPaintStyle(Paint.Style paintStyle) {
+    public ExtendedDrawView setPaintStyle(Paint.Style paintStyle) {
         this.mPaintStyle = paintStyle;
         return this;
     }
@@ -642,7 +649,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param lineCap
      * @return this instance of the view
      */
-    public ExtenedDrawView setLineCap(Paint.Cap lineCap) {
+    public ExtendedDrawView setLineCap(Paint.Cap lineCap) {
         this.mLineCap = lineCap;
         return this;
     }
@@ -653,7 +660,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param fontFamily
      * @return this instance of the view
      */
-    public ExtenedDrawView setFontFamily(Typeface fontFamily) {
+    public ExtendedDrawView setFontFamily(Typeface fontFamily) {
         this.mFontFamily = fontFamily;
         return this;
     }
@@ -664,7 +671,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param fontSize
      * @return this instance of the view
      */
-    public ExtenedDrawView setFontSize(float fontSize) {
+    public ExtendedDrawView setFontSize(float fontSize) {
         this.mFontSize = fontSize;
         return this;
     }
@@ -675,7 +682,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param antiAlias
      * @return this instance of the view
      */
-    public ExtenedDrawView setAntiAlias(boolean antiAlias) {
+    public ExtendedDrawView setAntiAlias(boolean antiAlias) {
         this.mAntiAlias = antiAlias;
         return this;
     }
@@ -686,7 +693,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      * @param dither
      * @return this instance of the view
      */
-    public ExtenedDrawView setDither(boolean dither) {
+    public ExtendedDrawView setDither(boolean dither) {
         this.mDither = dither;
         return this;
     }
@@ -698,7 +705,7 @@ public class ExtenedDrawView extends FrameLayout implements View.OnTouchListener
      *
      * @param onDrawViewListener
      */
-    public void setOnDrawViewListener(ExtenedDrawView.OnDrawViewListener onDrawViewListener) {
+    public void setOnDrawViewListener(ExtendedDrawView.OnDrawViewListener onDrawViewListener) {
         this.onDrawViewListener = onDrawViewListener;
     }
 

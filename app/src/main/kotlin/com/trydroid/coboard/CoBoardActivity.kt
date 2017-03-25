@@ -4,7 +4,10 @@ import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class CoBoardActivity : AppCompatActivity() {
 	private val mLinesReference: DatabaseReference by lazy { FirebaseDatabase.getInstance().reference.child(CHILD_LINES) }
@@ -15,22 +18,26 @@ class CoBoardActivity : AppCompatActivity() {
 		setupDrawView()
 	}
 
-	override fun onStart() {
-		super.onStart()
-		mLinesReference.addChildEventListener(mLinesReferenceListener)
-
+	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+		menuInflater.inflate(R.menu.menu_co_board, menu)
+		return super.onCreateOptionsMenu(menu)
 	}
 
-	override fun onStop() {
-		super.onStop()
-		mLinesReference.removeEventListener(mLinesReferenceListener)
-	}
+	override fun onOptionsItemSelected(item: MenuItem?) =
+		when (item?.itemId) {
+			R.id.action_clear -> consumeMenuSelected { clearDrawView() }
+			else              -> super.onOptionsItemSelected(item)
+		}
 
 	private fun setupDrawView() {
 	}
 
 	private fun sendToFirebase(drawMove: Point) {
 		mLinesReference.push().setValue(drawMove)
+	}
+
+	private fun clearDrawView() {
+		drawView.clear()
 	}
 
 	private val mLinesReferenceListener = object : ChildEventListener {
@@ -52,8 +59,14 @@ class CoBoardActivity : AppCompatActivity() {
 		}
 	}
 
+	inline fun consumeMenuSelected(func: () -> Unit): Boolean {
+		func()
+		return true
+	}
+
 	companion object {
 		private val TAG = CoBoardActivity::class.java.simpleName
+
 		private val CHILD_LINES = "lines"
 	}
 }

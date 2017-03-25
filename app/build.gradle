@@ -49,8 +49,6 @@ dependencies {
     compile("com.twitter.sdk.android:twitter:$twitter_sdk_version@aar") {
         transitive = true;
     }
-
-    compile "com.byox.drawview:drawview:$drawview_version"
 }
 apply plugin: 'com.google.gms.google-services'
 

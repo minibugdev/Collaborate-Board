@@ -5,7 +5,6 @@ ext {
     facebook_sdk_version = '4.9.0'
     twitter_core_version = '2.3.1'
     twitter_sdk_version = '2.3.2'
-    drawview_version = '1.0.5'
 }
 
 buildscript {

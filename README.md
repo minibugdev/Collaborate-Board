@@ -5,7 +5,8 @@
 Simple realtime collaborate board based on [Firebase](https://firebase.google.com/docs/android/setup) developed and written in [Kotlin](http://kotlinlang.org).
 
 ## Demo
-[![Collaborate Board of Android](https://www.youtube.com/yt/img/logo_1x.png)](https://www.youtube.com/watch?v=-YzpPoTy7Ys)
+![Collaborate Board of Android](https://github.com/minibugdev/Collaborate-Board/blob/master/screenshot.gif?raw=true)
+[Youtube](https://www.youtube.com/watch?v=-YzpPoTy7Ys)
 
 ## Getting Started
 

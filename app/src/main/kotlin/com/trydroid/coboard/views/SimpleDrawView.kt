@@ -9,6 +9,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 
+typealias OnDrawListener = (List<SimpleDrawView.Point>?) -> Unit
+
 /**
  * Customize form original source
  * - https://github.com/johncarl81/androiddraw/blob/master/src/main/java/org/example/androiddraw/SimpleDrawView.java
@@ -23,6 +25,8 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 			color = Color.RED
 		}
 	}
+
+	var drawListener: OnDrawListener? = null
 
 	init {
 		isFocusable = true
@@ -58,6 +62,9 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 			MotionEvent.ACTION_MOVE -> {
 				onTouchMove(event)
 			}
+			MotionEvent.ACTION_UP   -> {
+				onTouchEnd()
+			}
 		}
 
 		return true
@@ -74,8 +81,12 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 		invalidate()
 	}
 
-	private inner class Point(val x: Float = 0f,
-							  val y: Float = 0f) {
+	private fun onTouchEnd() {
+		drawListener?.invoke(mPointList.lastOrNull())
+	}
+
+	inner class Point(val x: Float = 0f,
+					  val y: Float = 0f) {
 
 		override fun toString(): String {
 			return "$x,$y"

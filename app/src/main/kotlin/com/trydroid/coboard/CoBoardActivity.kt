@@ -1,21 +1,22 @@
 package com.trydroid.coboard
 
-import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.*
+import com.trydroid.coboard.views.SimpleDrawView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class CoBoardActivity : AppCompatActivity() {
-	private val mLinesReference: DatabaseReference by lazy { FirebaseDatabase.getInstance().reference.child(CHILD_LINES) }
+	private val mLinesReference: DatabaseReference by lazy {
+		FirebaseDatabase.getInstance().reference.child(CHILD_LINES)
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(R.layout.activity_main)
-		setupDrawView()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -29,15 +30,32 @@ class CoBoardActivity : AppCompatActivity() {
 			else              -> super.onOptionsItemSelected(item)
 		}
 
-	private fun setupDrawView() {
+
+	override fun onStart() {
+		super.onStart()
+		mLinesReference.addChildEventListener(mLinesReferenceListener)
+		drawView.drawListener = { pointList ->
+			pointList?.let { sendToFirebase(pointList) }
+		}
 	}
 
-	private fun sendToFirebase(drawMove: Point) {
-		mLinesReference.push().setValue(drawMove)
+	override fun onStop() {
+		super.onStop()
+		mLinesReference.removeEventListener(mLinesReferenceListener)
+		drawView.drawListener = null
+	}
+
+	private fun sendToFirebase(pointList: List<SimpleDrawView.Point>) {
+		mLinesReference.push().setValue(pointList)
+	}
+
+	private fun clearFirebase() {
+		mLinesReference.push().removeValue()
 	}
 
 	private fun clearDrawView() {
 		drawView.clear()
+		clearFirebase()
 	}
 
 	private val mLinesReferenceListener = object : ChildEventListener {

@@ -1,15 +1,12 @@
 package com.trydroid.coboard.views
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 
-typealias OnDrawListener = (List<SimpleDrawView.Point>?) -> Unit
+typealias OnDrawListener = (List<Point>?) -> Unit
 
 /**
  * Customize form original source
@@ -17,7 +14,7 @@ typealias OnDrawListener = (List<SimpleDrawView.Point>?) -> Unit
  * - https://github.com/ByoxCode/DrawView/blob/master/drawview/src/main/java/com/byox/drawview/views/DrawView.java
  * */
 class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(context, attributeSet), View.OnTouchListener {
-	private val mPointList: MutableList<MutableList<Point>> = mutableListOf()
+	private val mLineHistoryList: MutableList<MutableList<Point>> = mutableListOf()
 	private val mPaint: Paint by lazy {
 		Paint(Paint.ANTI_ALIAS_FLAG).apply {
 			strokeWidth = STROKE_WIDTH
@@ -36,22 +33,19 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 
 	override fun onDraw(canvas: Canvas) {
 		val path = Path()
-		mPointList.forEach { pointHistory ->
-			pointHistory.forEachIndexed { index, point ->
+		mLineHistoryList.forEach { line ->
+			line.forEachIndexed { index, point ->
+				val x = point.x.toFloat()
+				val y = point.y.toFloat()
 				if (index == 0) {
-					path.moveTo(point.x, point.y)
+					path.moveTo(x, y)
 				}
 				else {
-					path.lineTo(point.x, point.y)
+					path.lineTo(x, y)
 				}
 			}
 			canvas.drawPath(path, mPaint)
 		}
-	}
-
-	fun clear() {
-		mPointList.clear()
-		invalidate()
 	}
 
 	override fun onTouch(view: View, event: MotionEvent): Boolean {
@@ -70,27 +64,31 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 		return true
 	}
 
+	fun clear() {
+		mLineHistoryList.clear()
+		invalidate()
+	}
+
+	fun drawLine(lineList: List<Point>) {
+		mLineHistoryList.add(lineList.toMutableList())
+		invalidate()
+	}
+
 	private fun onTouchStart() {
-		mPointList.add(mutableListOf())
+		mLineHistoryList.add(mutableListOf())
 	}
 
 	private fun onTouchMove(event: MotionEvent) {
-		mPointList.last()
-			.add(Point(x = event.x,
-					   y = event.y))
+		val point = Point().apply {
+			x = event.x.toInt()
+			y = event.y.toInt()
+		}
+		mLineHistoryList.last().add(point)
 		invalidate()
 	}
 
 	private fun onTouchEnd() {
-		drawListener?.invoke(mPointList.lastOrNull())
-	}
-
-	inner class Point(val x: Float = 0f,
-					  val y: Float = 0f) {
-
-		override fun toString(): String {
-			return "$x,$y"
-		}
+		drawListener?.invoke(mLineHistoryList.lastOrNull())
 	}
 
 	companion object {

@@ -1,12 +1,12 @@
 package com.trydroid.coboard
 
+import android.graphics.Point
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.firebase.database.*
-import com.trydroid.coboard.views.SimpleDrawView
 import kotlinx.android.synthetic.main.activity_main.*
 
 class CoBoardActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class CoBoardActivity : AppCompatActivity() {
 
 	override fun onOptionsItemSelected(item: MenuItem?) =
 		when (item?.itemId) {
-			R.id.action_clear -> consumeMenuSelected { clearDrawView() }
+			R.id.action_clear -> consumeMenuSelected { removeFirebaseChild() }
 			else              -> super.onOptionsItemSelected(item)
 		}
 
@@ -34,8 +34,8 @@ class CoBoardActivity : AppCompatActivity() {
 	override fun onStart() {
 		super.onStart()
 		mLinesReference.addChildEventListener(mLinesReferenceListener)
-		drawView.drawListener = { pointList ->
-			pointList?.let { sendToFirebase(pointList) }
+		drawView.drawListener = { lineList ->
+			lineList?.let { sendToFirebase(lineList) }
 		}
 	}
 
@@ -45,35 +45,42 @@ class CoBoardActivity : AppCompatActivity() {
 		drawView.drawListener = null
 	}
 
-	private fun sendToFirebase(pointList: List<SimpleDrawView.Point>) {
-		mLinesReference.push().setValue(pointList)
+	private fun sendToFirebase(lineList: List<Point>) {
+		mLinesReference.push().setValue(lineList)
 	}
 
-	private fun clearFirebase() {
-		mLinesReference.push().removeValue()
+	private fun removeFirebaseChild() {
+		mLinesReference.removeValue()
 	}
 
 	private fun clearDrawView() {
 		drawView.clear()
-		clearFirebase()
+	}
+
+	private fun drawLine(lineList: List<Point>) {
+		drawView.drawLine(lineList)
 	}
 
 	private val mLinesReferenceListener = object : ChildEventListener {
+		override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
+			Log.e(TAG, "onChildAdded")
+			dataSnapshot?.children
+				?.map { children -> children.getValue<Point>(Point::class.java) }
+				?.let { lineList -> drawLine(lineList) }
+		}
+
+		override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
+			Log.e(TAG, "onChildRemoved")
+			clearDrawView()
+		}
+
 		override fun onChildMoved(dataSnapshot: DataSnapshot?, p1: String?) {
 		}
 
 		override fun onChildChanged(dataSnapshot: DataSnapshot?, p1: String?) {
 		}
 
-		override fun onChildAdded(dataSnapshot: DataSnapshot?, p1: String?) {
-			Log.e(TAG, "onDataChange")
-		}
-
-		override fun onChildRemoved(dataSnapshot: DataSnapshot?) {
-		}
-
 		override fun onCancelled(databaseError: DatabaseError) {
-			Log.w(TAG, "Lines Reference onCancelled", databaseError.toException())
 		}
 	}
 

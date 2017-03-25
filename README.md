@@ -1,5 +1,29 @@
 ## Collaborate Board of Android
 [![License](http://img.shields.io/badge/License-MIT-green.svg?style=flat)](https://github.com/minibugdev/Collaborate-Board/blob/master/LICENSE)
-[![Kotlin](https://img.shields.io/badge/kotlin-1.0.6-blue.svg)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.1.1-blue.svg)](http://kotlinlang.org)
 
-Realtime collaborate board based on Firebase developed and written in Kotlin.
+Simple realtime collaborate board based on [Firebase](https://firebase.google.com/docs/android/setup) developed and written in [Kotlin](http://kotlinlang.org).
+
+## Demo
+[![Collaborate Board of Android](https://www.youtube.com/yt/img/logo_1x.png)](https://www.youtube.com/watch?v=kOzvKCd6w5Y)
+
+## Getting Started
+
+To get started and run the app, you need to follow these simple steps:
+
+1. Open the Collaborate Board in Android Studio.
+2. Go to [Firebase Console](https://console.firebase.google.com/) and create new project.
+3. Download "google-services.json" file and add to the project.
+4. Let's Enjoy :)
+
+## Dependencies
+- [Firebase](https://firebase.google.com/docs/android/setup)
+- [Kotlin](http://kotlinlang.org)
+
+## Todo
+- [ ] Reduce re-draw view 2 times (from `touch` event and `firebase` callback child added)
+- [ ] Change size and color
+- [ ] Add eraser
+- [ ] Add [Sticker](https://medium.com/uptech-team/how-to-create-snapchat-like-stickers-for-android-50512957c351#.5abwfbcwq)
+
+Please feel free to contributions or PR.

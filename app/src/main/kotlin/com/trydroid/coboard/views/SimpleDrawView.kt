@@ -32,26 +32,20 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 	}
 
 	override fun onDraw(canvas: Canvas) {
-		val path = Path()
 		mLineHistoryList.forEach { line ->
-			line.forEachIndexed { index, point ->
-				val x = point.x.toFloat()
-				val y = point.y.toFloat()
-				if (index == 0) {
-					path.moveTo(x, y)
-				}
-				else {
-					path.lineTo(x, y)
-				}
+			if (line.size == 1) {
+				onDrawPoint(canvas, line)
 			}
-			canvas.drawPath(path, mPaint)
+			else {
+				onDrawLine(canvas, line)
+			}
 		}
 	}
 
 	override fun onTouch(view: View, event: MotionEvent): Boolean {
 		when (event.action) {
 			MotionEvent.ACTION_DOWN -> {
-				onTouchStart()
+				onTouchStart(event)
 			}
 			MotionEvent.ACTION_MOVE -> {
 				onTouchMove(event)
@@ -74,21 +68,48 @@ class SimpleDrawView(context: Context, attributeSet: AttributeSet) : View(contex
 		invalidate()
 	}
 
-	private fun onTouchStart() {
+	private fun onDrawPoint(canvas: Canvas, line: MutableList<Point>) {
+		line.firstOrNull()
+			?.let { point -> canvas.drawPoint(point.x.toFloat(), point.y.toFloat(), mPaint) }
+	}
+
+	private fun onDrawLine(canvas: Canvas, line: List<Point>) {
+		val path = Path()
+		line.forEachIndexed { index, point ->
+			val x = point.x.toFloat()
+			val y = point.y.toFloat()
+			if (index == 0) {
+				path.moveTo(x, y)
+			}
+			else {
+				path.lineTo(x, y)
+			}
+		}
+		canvas.drawPath(path, mPaint)
+	}
+
+	private fun onTouchStart(event: MotionEvent) {
 		mLineHistoryList.add(mutableListOf())
+		addPointToCurrentLineHistory(event.x, event.y)
+		invalidate()
 	}
 
 	private fun onTouchMove(event: MotionEvent) {
-		val point = Point().apply {
-			x = event.x.toInt()
-			y = event.y.toInt()
-		}
-		mLineHistoryList.last().add(point)
+		addPointToCurrentLineHistory(event.x, event.y)
 		invalidate()
 	}
 
 	private fun onTouchEnd() {
 		drawListener?.invoke(mLineHistoryList.lastOrNull())
+	}
+
+	private fun addPointToCurrentLineHistory(x: Float, y: Float) {
+		Point().apply {
+			this.x = x.toInt()
+			this.y = y.toInt()
+		}.let { point ->
+			mLineHistoryList.last().add(point)
+		}
 	}
 
 	companion object {

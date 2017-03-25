@@ -26,5 +26,6 @@ To get started and run the app, you need to follow these simple steps:
 - [ ] Change Paint size and color
 - [ ] Add Eraser
 - [ ] Add [Sticker](https://medium.com/uptech-team/how-to-create-snapchat-like-stickers-for-android-50512957c351#.5abwfbcwq)
+- [ ] Let's user can login and create private room by Firebase Authentication
 
 Please feel free to contributions or PR.

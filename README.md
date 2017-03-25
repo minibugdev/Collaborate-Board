@@ -22,8 +22,8 @@ To get started and run the app, you need to follow these simple steps:
 
 ## Todo
 - [ ] Reduce re-draw view 2 times (from `touch` event and `firebase` callback child added)
-- [ ] Change size and color
-- [ ] Add eraser
+- [ ] Change Paint size and color
+- [ ] Add Eraser
 - [ ] Add [Sticker](https://medium.com/uptech-team/how-to-create-snapchat-like-stickers-for-android-50512957c351#.5abwfbcwq)
 
 Please feel free to contributions or PR.

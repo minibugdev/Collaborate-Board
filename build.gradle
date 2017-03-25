@@ -1,5 +1,5 @@
 ext {
-    kotlin_version = '1.0.6'
+    kotlin_version = '1.1.1'
     support_libs_version = '25.2.0'
     firebase_version = '10.2.0'
     facebook_sdk_version = '4.9.0'
